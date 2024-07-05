@@ -241,12 +241,19 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
+  -- Automatically close tags in HTML
   {
     'windwp/nvim-ts-autotag',
     config = function()
       require('nvim-ts-autotag').setup()
     end,
   },
+
+  -- Automatically close brackets/braces
+  'rstacruz/vim-closer',
+
+  -- Copilot
+  'github/copilot.vim',
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
