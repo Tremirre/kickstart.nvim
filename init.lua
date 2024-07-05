@@ -93,6 +93,8 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+-- Make it use powershell
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -154,6 +156,15 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- [[ Configure the built-in terminal ]]
+vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
+vim.opt.shellcmdflag =
+  '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
+vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+vim.opt.shellquote = ''
+vim.opt.shellxquote = ''
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -258,9 +269,19 @@ require('lazy').setup({
   -- Better terminal toggle
   {
     'akinsho/toggleterm.nvim',
-    version = '*',
+    config = true,
+    cmd = 'ToggleTerm',
+    keys = { { '<C-\\>', '<cmd>ToggleTerm<cr>', desc = 'Toggle floating terminal' } },
     opts = {
+      open_mapping = [[<C-\>]],
       direction = 'float',
+      shade_filetypes = {},
+      hide_numbers = true,
+      insert_mappings = true,
+      terminal_mappings = true,
+      start_in_insert = true,
+      close_on_exit = true,
+      shell = vim.o.shell,
     },
   },
 
