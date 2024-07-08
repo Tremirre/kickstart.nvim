@@ -93,7 +93,6 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
--- Make it use powershell
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -158,7 +157,7 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- [[ Configure the built-in terminal ]]
-vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
+vim.opt.shell = 'powershell.exe'
 vim.opt.shellcmdflag =
   '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
 vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
