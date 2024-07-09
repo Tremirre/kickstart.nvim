@@ -259,11 +259,23 @@ require('lazy').setup({
     end,
   },
 
-  -- Automatically close brackets/braces
-  'rstacruz/vim-closer',
-
   -- Copilot
   'github/copilot.vim',
+
+  -- Automatically close brackets/braces
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    -- Optional dependency
+    dependencies = { 'hrsh7th/nvim-cmp' },
+    config = function()
+      require('nvim-autopairs').setup {}
+      -- If you want to automatically add `(` after selecting a function or method
+      local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
+      local cmp = require 'cmp'
+      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+    end,
+  },
 
   -- Better terminal toggle
   {
@@ -774,10 +786,9 @@ require('lazy').setup({
     },
     config = function()
       require('dap-python').setup 'python'
-      -- add keybinds to run debug with <leader>dpr
-      vim.keymap.set('n', '<leader>dpr', function()
+      vim.keymap.set('n', '<leader>dpt', function()
         require('dap-python').test_method()
-      end, { desc = '[D]ebug [P]ython [R]un' })
+      end, { desc = '[D]ebug [P]ython [T]est' })
     end,
   },
 
