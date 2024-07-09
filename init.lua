@@ -616,10 +616,6 @@ require('lazy').setup({
             capabilities = capabilities,
           },
         },
-        mypy = {},
-        black = {},
-        ruff = {},
-        eslint = {},
 
         emmet_ls = {
           setup = {
@@ -675,6 +671,11 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'mypy',
+        'black',
+        'ruff',
+        'eslint',
+        'debugpy',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -728,6 +729,56 @@ require('lazy').setup({
         javascript = { { 'prettierd', 'prettier' } },
       },
     },
+  },
+  { -- debugging
+    'mfussenegger/nvim-dap',
+    config = function()
+      -- add keybinds
+      vim.keymap.set('n', '<leader>dc', '<cmd>lua require"dap".continue()<CR>', { desc = '[D]ebug [C]ontinue' })
+      vim.keymap.set('n', '<leader>ds', '<cmd>lua require"dap".step_over()<CR>', { desc = '[D]ebug [S]tep Over' })
+      vim.keymap.set('n', '<leader>di', '<cmd>lua require"dap".step_into()<CR>', { desc = '[D]ebug [I]nto' })
+      vim.keymap.set('n', '<leader>do', '<cmd>lua require"dap".step_out()<CR>', { desc = '[D]ebug [O]ut' })
+      vim.keymap.set('n', '<leader>dt', '<cmd>lua require"dap".toggle_breakpoint()<CR>', { desc = '[D]ebug [T]oggle breakpoint' })
+      vim.keymap.set('n', '<leader>dl', '<cmd>lua require"dap".list_breakpoints()<CR>', { desc = '[D]ebug [L]ist breakpoints' })
+      vim.keymap.set('n', '<leader>dr', '<cmd>lua require"dap".repl.toggle()<CR>', { desc = '[D]ebug [R]epl' })
+      vim.keymap.set('n', '<leader>dn', '<cmd>lua require"dap".run_last()<CR>', { desc = '[D]ebug [N]ext' })
+    end,
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio',
+    },
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+      dapui.setup()
+      dap.listeners.after.event_initialized['dapui_config'] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated['dapui_config'] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited['dapui_config'] = function()
+        dapui.close()
+      end
+    end,
+  },
+  {
+    'mfussenegger/nvim-dap-python',
+    ft = 'python',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'rcarriga/nvim-dap-ui',
+    },
+    config = function()
+      require('dap-python').setup 'python'
+      -- add keybinds to run debug with <leader>dpr
+      vim.keymap.set('n', '<leader>dpr', function()
+        require('dap-python').test_method()
+      end, { desc = '[D]ebug [P]ython [R]un' })
+    end,
   },
 
   { -- linting
