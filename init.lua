@@ -92,6 +92,7 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
+-- Set to true if you have a Nerd Font installed and selected in the terminal dsafasdf dfafksadf jsdafn dfkja nsdf kasdjnf saldkfn asdkfn askfn sdlk fjnasdlkf n
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -615,6 +616,10 @@ require('lazy').setup({
             capabilities = capabilities,
           },
         },
+        mypy = {},
+        black = {},
+        ruff = {},
+        eslint = {},
 
         emmet_ls = {
           setup = {
@@ -723,6 +728,24 @@ require('lazy').setup({
         javascript = { { 'prettierd', 'prettier' } },
       },
     },
+  },
+
+  { -- linting
+    'mfussenegger/nvim-lint',
+    lazy = false,
+    event = 'BufWritePost',
+    config = function()
+      require('lint').linters_by_ft = {
+        python = { 'ruff', 'mypy' },
+        javascript = { 'eslint' },
+      }
+      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+        pattern = { '*.py', '*.js' },
+        callback = function()
+          require('lint').try_lint()
+        end,
+      })
+    end,
   },
 
   { -- Autocompletion
