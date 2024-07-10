@@ -92,7 +92,7 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
--- Set to true if you have a Nerd Font installed and selected in the terminal dsafasdf dfafksadf jsdafn dfkja nsdf kasdjnf saldkfn asdkfn askfn sdlk fjnasdlkf n
+-- Set to true if you have a Nerd Font installed and selected in the terminal
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -644,16 +644,34 @@ require('lazy').setup({
             },
           },
         },
+
+        vuels = {
+          setup = {},
+        },
+
+        tsserver = {
+          setup = {},
+        },
+
+        css_variables = {
+          setup = {},
+        },
+
+        tailwindcss = {
+          setup = {},
+        },
+
+        cssls = {
+          setup = {
+            capabilities = capabilities,
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          setup = {},
-        },
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -725,7 +743,8 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, html = true }
+
         return {
           timeout_ms = 5000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -738,7 +757,6 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -799,7 +817,6 @@ require('lazy').setup({
     config = function()
       require('lint').linters_by_ft = {
         python = { 'ruff', 'mypy' },
-        javascript = { 'eslint' },
       }
       vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         pattern = { '*.py', '*.js' },
@@ -1000,7 +1017,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'html' } },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
