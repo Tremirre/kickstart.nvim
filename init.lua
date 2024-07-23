@@ -302,6 +302,9 @@ require('lazy').setup({
     },
   },
 
+  {
+    'tpope/vim-fugitive',
+  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -318,6 +321,11 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
+
+    config = function()
+      require('gitsigns').setup()
+      vim.keymap.set('n', '<leader>h', '<cmd>lua require"gitsigns".preview_hunk()<CR>', { desc = 'Preview git [H]unk' })
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
