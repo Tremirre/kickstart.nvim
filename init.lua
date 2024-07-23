@@ -94,6 +94,8 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 
+vim.g.python3_host_prog = 'python'
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -277,6 +279,10 @@ require('lazy').setup({
     end,
   },
 
+  -- Multi-cursor support
+  {
+    'mg979/vim-visual-multi',
+  },
   -- Better terminal toggle
   {
     'akinsho/toggleterm.nvim',
@@ -348,6 +354,18 @@ require('lazy').setup({
     end,
   },
 
+  -- Python semantic highlighting
+  -- {
+  --   'wookayin/semshi',
+  --   build = ':UpdateRemotePlugins',
+  --   version = '*', -- Recommended to use the latest release
+  --   init = function() -- example, skip if you're OK with the default config
+  --     vim.g['semshi#error_sign'] = false
+  --   end,
+  --   config = function()
+  --     -- any config or setup that would need to be done after plugin loading
+  --   end,
+  -- },
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
