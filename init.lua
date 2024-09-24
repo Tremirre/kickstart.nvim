@@ -94,7 +94,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 
-vim.g.python3_host_prog = 'python'
+vim.g.python3_host_prog = vim.env.NEOVIM_PYTHON_PATH or 'python'
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -363,17 +363,12 @@ require('lazy').setup({
   },
 
   -- Python semantic highlighting
-  -- {
-  --   'wookayin/semshi',
-  --   build = ':UpdateRemotePlugins',
-  --   version = '*', -- Recommended to use the latest release
-  --   init = function() -- example, skip if you're OK with the default config
-  --     vim.g['semshi#error_sign'] = false
-  --   end,
-  --   config = function()
-  --     -- any config or setup that would need to be done after plugin loading
-  --   end,
-  -- },
+  {
+    'wookayin/semshi',
+    ft = 'python',
+    build = ':UpdateRemotePlugins',
+    lazy = false,
+  },
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -460,8 +455,16 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-      -- search treesitter
-      vim.keymap.set('n', '<leader>ss', builtin.treesitter, { desc = '[S]earch [S]symbols' })
+      vim.keymap.set('n', '<leader>so', builtin.lsp_document_symbols, { desc = '[S]earch [O]utline' })
+      -- search git branches
+      vim.keymap.set('n', '<leader>sb', function()
+        builtin.git_branches(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+        -- search symbols in workspace
+        vim.keymap.set('n', '<leader>sw', builtin.lsp_workspace_symbols, { desc = '[S]earch [W]orkspace' })
+      end, { desc = '[S]earch [B]ranches' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -673,12 +676,14 @@ require('lazy').setup({
           setup = {},
         },
 
-        tsserver = {
+        css_variables = {
           setup = {},
         },
 
-        css_variables = {
-          setup = {},
+        ts_ls = {
+          setup = {
+            capabilities = capabilities,
+          },
         },
 
         tailwindcss = {
