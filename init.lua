@@ -286,25 +286,29 @@ require('lazy').setup({
   -- Better terminal toggle
   {
     'akinsho/toggleterm.nvim',
-    config = true,
     cmd = 'ToggleTerm',
     keys = { { '<C-\\>', '<cmd>ToggleTerm<cr>', desc = 'Toggle floating terminal' } },
-    opts = {
-      open_mapping = [[<C-\>]],
-      direction = 'float',
-      shade_filetypes = {},
-      hide_numbers = true,
-      insert_mappings = true,
-      terminal_mappings = true,
-      start_in_insert = true,
-      close_on_exit = true,
-      shell = vim.o.shell,
-    },
+    config = function()
+      require('toggleterm').setup {
+        size = 20,
+        open_mapping = [[<C-\>]],
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = true,
+        start_in_insert = true,
+        insert_mappings = true,
+        persist_size = true,
+        direction = 'float',
+        close_on_exit = true,
+        shell = vim.o.shell,
+      }
+    end,
   },
 
   {
     'tpope/vim-fugitive',
   },
+
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -471,9 +475,15 @@ require('lazy').setup({
           winblend = 10,
           previewer = false,
         })
-        -- search symbols in workspace
-        vim.keymap.set('n', '<leader>sw', builtin.lsp_workspace_symbols, { desc = '[S]earch [W]orkspace' })
       end, { desc = '[S]earch [B]ranches' })
+      -- search symbols in workspace
+      vim.keymap.set('n', '<leader>ssa', builtin.lsp_dynamic_workspace_symbols, { desc = '[S]earch [S]ymbols ([A]ll) in workspace' })
+      vim.keymap.set('n', '<leader>ssf', function()
+        require('telescope.builtin').lsp_dynamic_workspace_symbols { symbols = { 'Function', 'Method' } }
+      end, { desc = '[S]earch [S]ymbols ([F]unctions) in workspace' })
+      vim.keymap.set('n', '<leader>ssc', function()
+        require('telescope.builtin').lsp_dynamic_workspace_symbols { symbols = { 'Class' } }
+      end, { desc = '[S]earch [S]ymbols ([C]lasses) in workspace' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
