@@ -911,7 +911,7 @@ require('lazy').setup({
     event = 'BufWritePost',
     config = function()
       require('lint').linters_by_ft = {
-        python = { 'ruff', 'mypy' },
+        python = { 'mypy' },
       }
       vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         pattern = { '*.py', '*.js' },
