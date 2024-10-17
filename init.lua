@@ -694,6 +694,9 @@ require('lazy').setup({
               diagnostics = {
                 enable = false,
               },
+              cargo = {
+                allFeatures = true,
+              },
             },
           },
         },
