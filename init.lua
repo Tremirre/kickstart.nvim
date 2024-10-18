@@ -643,6 +643,7 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+            vim.lsp.inlay_hint.enable()
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end, '[T]oggle Inlay [H]ints')
@@ -667,16 +668,22 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        pyright = {
+        clangd = {},
+
+        basedpyright = {
           setup = {
             capabilities = capabilities,
           },
           settings = {
-            python = {
+            basedpyright = {
               analysis = {
                 diagnosticMode = 'workspace',
+                typeCheckingMode = 'standard',
+                inlayHints = {
+                  variableTypes = true,
+                  callArgumentNames = true,
+                  functionReturnTypes = true,
+                },
               },
             },
           },
@@ -1053,6 +1060,11 @@ require('lazy').setup({
         background = {
           dark = 'wave',
         },
+        overrides = function(colors)
+          return {
+            ['@variable'] = { fg = '#93c1b0' },
+          }
+        end,
       }
     end,
   },
