@@ -350,7 +350,13 @@ require('lazy').setup({
               function()
                 local unsaved_buffers = 0
                 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                  if vim.api.nvim_buf_get_option(buf, 'modified') then
+                  -- Check if the buffer is valid, listed, and has a name
+                  if
+                    vim.api.nvim_buf_is_valid(buf)
+                    and vim.api.nvim_buf_get_option(buf, 'buflisted')
+                    and vim.api.nvim_buf_get_name(buf) ~= ''
+                    and vim.api.nvim_buf_get_option(buf, 'modified')
+                  then
                     unsaved_buffers = unsaved_buffers + 1
                   end
                 end
