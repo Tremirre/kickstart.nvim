@@ -278,6 +278,24 @@ require('lazy').setup({
       cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
   },
+
+  -- Allows for editing file explorer to create and delete files and directories
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    config = function()
+      require('oil').setup {
+        vim.keymap.set('n', '<leader>o', '<cmd>Oil<CR>', { desc = 'Open [O]il' }),
+      }
+    end,
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+  },
+
+  -- Allow for pinning file for quick browsing
   {
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
