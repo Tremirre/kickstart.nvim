@@ -219,6 +219,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = { '**/templates/**/*.html', '**/templates/*.html', 'templates/**/*.html', "templates/*.html" },
+  callback = function()
+    vim.opt.filetype = 'htmldjango'
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -962,7 +969,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, html = true }
+        local disable_filetypes = { c = true, cpp = true }
 
         return {
           timeout_ms = 5000,
@@ -973,6 +980,8 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff_format', 'ruff_fix', 'ruff_organize_imports' },
+
+        htmldjango = { 'djlint' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
