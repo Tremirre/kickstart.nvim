@@ -355,7 +355,7 @@ require('lazy').setup({
                   end
                 end
                 if unsaved_buffers > 0 then
-                  return '🔴 Unsaved Changes!'
+                  return 'Unsaved Changes!'
                 else
                   return ''
                 end
@@ -372,6 +372,19 @@ require('lazy').setup({
           lualine_x = {},
           lualine_y = { 'buffers' },
           lualine_z = { 'tabs' },
+        },
+        sections = {
+          lualine_c = {
+            {
+              'filename',
+              path = 0,
+              symbols = {
+                modified = '✎',
+                readonly = '🔒',
+                unnamed = '[No Name]',
+              },
+            },
+          },
         },
       }
     end,
