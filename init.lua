@@ -1,4 +1,6 @@
 --[[
+--
+--sdfasdf
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -292,7 +294,6 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>o', '<cmd>Oil<CR>', { desc = 'Open [O]il' }),
       }
     end,
-    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
   },
 
   -- Allow for pinning file for quick browsing
@@ -331,6 +332,48 @@ require('lazy').setup({
       vim.keymap.set('n', '<C-S-N>', function()
         harpoon:list():next()
       end)
+    end,
+  },
+
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'eschasnovski/mini.icons' },
+    config = function()
+      require('lualine').setup {
+        options = {
+          theme = 'auto',
+        },
+        tabline = {
+          lualine_a = {},
+          lualine_b = {
+            {
+              function()
+                local unsaved_buffers = 0
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                  if vim.api.nvim_buf_get_option(buf, 'modified') then
+                    unsaved_buffers = unsaved_buffers + 1
+                  end
+                end
+                if unsaved_buffers > 0 then
+                  return '🔴 Unsaved Changes!'
+                else
+                  return ''
+                end
+              end,
+              color = { fg = '#ff0000', gui = 'bold' }, -- Red and bold for visibility
+            },
+          },
+          lualine_c = {
+            {
+              'filename',
+              path = 1,
+            },
+          },
+          lualine_x = {},
+          lualine_y = { 'buffers' },
+          lualine_z = { 'tabs' },
+        },
+      }
     end,
   },
 
@@ -1145,20 +1188,21 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- Notifications
+      require('mini.notify').setup()
 
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+      -- Extend search to work on multiple lines
+      require('mini.jump').setup()
+
+      -- Show current scope
+      require('mini.indentscope').setup {
+        draw = {
+          delay = 50,
+          animation = function()
+            return 0
+          end,
+        },
+      }
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
