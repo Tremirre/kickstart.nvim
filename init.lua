@@ -220,7 +220,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = { '**/templates/**/*.html', '**/templates/*.html', 'templates/**/*.html', "templates/*.html" },
+  pattern = { '**/templates/**/*.html', '**/templates/*.html', 'templates/**/*.html', 'templates/*.html' },
   callback = function()
     vim.opt.filetype = 'htmldjango'
   end,
@@ -344,7 +344,7 @@ require('lazy').setup({
 
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'eschasnovski/mini.icons' },
+    dependencies = { 'echasnovski/mini.icons' },
     config = function()
       require('lualine').setup {
         options = {
