@@ -168,15 +168,6 @@ vim.g.loaded_2html_plugin = 1
 vim.g.loaded_tarPlugin = 1
 vim.g.loaded_gzip = 1
 
--- [[ Configure the built-in terminal ]]
--- vim.opt.shell = 'powershell.exe'
--- vim.opt.shellcmdflag =
---   '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
--- vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
--- vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
--- vim.opt.shellquote = ''
--- vim.opt.shellxquote = ''
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -352,7 +343,7 @@ require('lazy').setup({
   {
     'nvim-lualine/lualine.nvim',
     event = 'UIEnter',
-    dependencies = { 'eschasnovski/mini.icons' },
+    dependencies = { 'echasnovski/mini.icons' },
     opts = {
       options = {
         theme = 'auto',
