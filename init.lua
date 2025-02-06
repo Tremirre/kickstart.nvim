@@ -160,14 +160,22 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Disable unused runtime plugins
+vim.g.loaded_matchit = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_tutor = 1
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_gzip = 1
+
 -- [[ Configure the built-in terminal ]]
-vim.opt.shell = 'powershell.exe'
-vim.opt.shellcmdflag =
-  '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
-vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
-vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-vim.opt.shellquote = ''
-vim.opt.shellxquote = ''
+-- vim.opt.shell = 'powershell.exe'
+-- vim.opt.shellcmdflag =
+--   '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+-- vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
+-- vim.opt.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+-- vim.opt.shellquote = ''
+-- vim.opt.shellxquote = ''
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -220,7 +228,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = { '**/templates/**/*.html', '**/templates/*.html', 'templates/**/*.html', "templates/*.html" },
+  pattern = { '**/templates/**/*.html', '**/templates/*.html', 'templates/**/*.html', 'templates/*.html' },
   callback = function()
     vim.opt.filetype = 'htmldjango'
   end,
@@ -265,6 +273,7 @@ require('lazy').setup({
   -- Automatically close tags in HTML
   {
     'windwp/nvim-ts-autotag',
+    ft = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'htmldjango' },
     config = function()
       require('nvim-ts-autotag').setup()
     end,
@@ -276,7 +285,7 @@ require('lazy').setup({
   -- Automatically close brackets/braces
   {
     'windwp/nvim-autopairs',
-    event = 'InsertEnter',
+    event = 'UIEnter',
     -- Optional dependency
     dependencies = { 'hrsh7th/nvim-cmp' },
     config = function()
@@ -293,19 +302,17 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
-    opts = {},
+    opts = {
+      vim.keymap.set('n', '<leader>o', '<cmd>Oil<CR>', { desc = 'Open [O]il' }),
+    },
     -- Optional dependencies
     dependencies = { { 'echasnovski/mini.icons', opts = {} } },
-    config = function()
-      require('oil').setup {
-        vim.keymap.set('n', '<leader>o', '<cmd>Oil<CR>', { desc = 'Open [O]il' }),
-      }
-    end,
   },
 
   -- Allow for pinning file for quick browsing
   {
     'ThePrimeagen/harpoon',
+    event = 'BufEnter',
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
@@ -344,93 +351,92 @@ require('lazy').setup({
 
   {
     'nvim-lualine/lualine.nvim',
+    event = 'UIEnter',
     dependencies = { 'eschasnovski/mini.icons' },
-    config = function()
-      require('lualine').setup {
-        options = {
-          theme = 'auto',
-        },
-        tabline = {
-          lualine_a = {},
-          lualine_b = {
-            {
-              function()
-                local unsaved_buffers = 0
-                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                  -- Check if the buffer is valid, listed, and has a name
-                  if
-                    vim.api.nvim_buf_is_valid(buf)
-                    and vim.api.nvim_buf_get_option(buf, 'buflisted')
-                    and vim.api.nvim_buf_get_name(buf) ~= ''
-                    and vim.api.nvim_buf_get_option(buf, 'modified')
-                  then
-                    unsaved_buffers = unsaved_buffers + 1
-                  end
+    opts = {
+      options = {
+        theme = 'auto',
+      },
+      tabline = {
+        lualine_a = {},
+        lualine_b = {
+          {
+            function()
+              local unsaved_buffers = 0
+              for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                -- Check if the buffer is valid, listed, and has a name
+                if
+                  vim.api.nvim_buf_is_valid(buf)
+                  and vim.api.nvim_buf_get_option(buf, 'buflisted')
+                  and vim.api.nvim_buf_get_name(buf) ~= ''
+                  and vim.api.nvim_buf_get_option(buf, 'modified')
+                then
+                  unsaved_buffers = unsaved_buffers + 1
                 end
-                if unsaved_buffers > 0 then
-                  return 'Unsaved Changes!'
-                else
-                  return ''
-                end
-              end,
-              color = { fg = '#ff0000', gui = 'bold' }, -- Red and bold for visibility
-            },
-          },
-          lualine_c = {
-            {
-              'filename',
-              path = 1,
-            },
-          },
-          lualine_x = {},
-          lualine_y = { 'buffers' },
-          lualine_z = { 'tabs' },
-        },
-        sections = {
-          lualine_c = {
-            {
-              'filename',
-              path = 0,
-              symbols = {
-                modified = '✎',
-                readonly = '🔒',
-                unnamed = '[No Name]',
-              },
-            },
+              end
+              if unsaved_buffers > 0 then
+                return 'Unsaved Changes!'
+              else
+                return ''
+              end
+            end,
+            color = { fg = '#ff0000', gui = 'bold' }, -- Red and bold for visibility
           },
         },
-      }
-    end,
+        lualine_c = {
+          {
+            'filename',
+            path = 1,
+          },
+        },
+        lualine_x = {},
+        lualine_y = { 'buffers' },
+        lualine_z = { 'tabs' },
+      },
+      sections = {
+        lualine_c = {
+          {
+            'filename',
+            path = 0,
+            symbols = {
+              modified = '✎',
+              readonly = '🔒',
+              unnamed = '[No Name]',
+            },
+          },
+        },
+      },
+    },
   },
 
   -- Multi-cursor support
   {
     'mg979/vim-visual-multi',
+    cmd = 'Git',
   },
   -- Better terminal toggle
   {
     'akinsho/toggleterm.nvim',
     cmd = 'ToggleTerm',
     keys = { { '<C-\\>', '<cmd>ToggleTerm<cr>', desc = 'Toggle floating terminal' } },
-    config = function()
-      require('toggleterm').setup {
-        size = 20,
-        open_mapping = [[<C-\>]],
-        hide_numbers = true,
-        shade_filetypes = {},
-        shade_terminals = true,
-        start_in_insert = true,
-        insert_mappings = true,
-        persist_size = true,
-        direction = 'float',
-        close_on_exit = true,
-        shell = vim.o.shell,
-      }
-    end,
+    opts = {
+      size = 20,
+      open_mapping = [[<C-\>]],
+      hide_numbers = true,
+      shade_filetypes = {},
+      shade_terminals = true,
+      start_in_insert = true,
+      insert_mappings = true,
+      persist_size = true,
+      direction = 'float',
+      close_on_exit = true,
+      shell = vim.o.shell,
+    },
   },
 
   {
     'tpope/vim-fugitive',
+    event = 'BufRead',
   },
 
   -- Here is a more advanced example where we pass configuration
@@ -440,6 +446,7 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    event = 'VeryLazy',
     opts = {
       signs = {
         add = { text = '+' },
@@ -473,7 +480,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    keys = '<leader>',
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
 
@@ -495,7 +502,6 @@ require('lazy').setup({
     'wookayin/semshi',
     ft = 'python',
     build = ':UpdateRemotePlugins',
-    lazy = false,
     config = function()
       vim.keymap.set('n', '<leader>rr', ':Semshi rename<CR>', { desc = 'Rename variable under cursor' })
       vim.keymap.set('n', '<BS>', ':Semshi goto name next<CR>', { desc = 'Go to next variable' })
@@ -515,7 +521,7 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    cmd = 'Telescope',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -535,7 +541,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font, lazy = true },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -636,19 +642,20 @@ require('lazy').setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    event = 'BufReadPre',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      'williamboman/mason-lspconfig.nvim',
+      { 'williamboman/mason.nvim', config = true, cmd = { 'Mason' } }, -- NOTE: Must be loaded before dependants
+      { 'williamboman/mason-lspconfig.nvim', cmd = { 'Mason' } },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', opts = {}, event = 'LspAttach' },
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim', opts = {} },
+      { 'folke/neodev.nvim', opts = {}, ft = 'lua' },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -988,55 +995,6 @@ require('lazy').setup({
       },
     },
   },
-  { -- debugging
-    'mfussenegger/nvim-dap',
-    config = function()
-      -- add keybinds
-      vim.keymap.set('n', '<leader>dc', '<cmd>lua require"dap".continue()<CR>', { desc = '[D]ebug [C]ontinue' })
-      vim.keymap.set('n', '<leader>ds', '<cmd>lua require"dap".step_over()<CR>', { desc = '[D]ebug [S]tep Over' })
-      vim.keymap.set('n', '<leader>di', '<cmd>lua require"dap".step_into()<CR>', { desc = '[D]ebug [I]nto' })
-      vim.keymap.set('n', '<leader>do', '<cmd>lua require"dap".step_out()<CR>', { desc = '[D]ebug [O]ut' })
-      vim.keymap.set('n', '<leader>dt', '<cmd>lua require"dap".toggle_breakpoint()<CR>', { desc = '[D]ebug [T]oggle breakpoint' })
-      vim.keymap.set('n', '<leader>dl', '<cmd>lua require"dap".list_breakpoints()<CR>', { desc = '[D]ebug [L]ist breakpoints' })
-      vim.keymap.set('n', '<leader>dr', '<cmd>lua require"dap".repl.toggle()<CR>', { desc = '[D]ebug [R]epl' })
-      vim.keymap.set('n', '<leader>dn', '<cmd>lua require"dap".run_last()<CR>', { desc = '[D]ebug [N]ext' })
-    end,
-  },
-  {
-    'rcarriga/nvim-dap-ui',
-    dependencies = {
-      'mfussenegger/nvim-dap',
-      'nvim-neotest/nvim-nio',
-    },
-    config = function()
-      local dap = require 'dap'
-      local dapui = require 'dapui'
-      dapui.setup()
-      dap.listeners.after.event_initialized['dapui_config'] = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated['dapui_config'] = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited['dapui_config'] = function()
-        dapui.close()
-      end
-    end,
-  },
-  {
-    'mfussenegger/nvim-dap-python',
-    ft = 'python',
-    dependencies = {
-      'mfussenegger/nvim-dap',
-      'rcarriga/nvim-dap-ui',
-    },
-    config = function()
-      require('dap-python').setup 'python'
-      vim.keymap.set('n', '<leader>dpt', function()
-        require('dap-python').test_method()
-      end, { desc = '[D]ebug [P]ython [T]est' })
-    end,
-  },
 
   { -- linting
     'mfussenegger/nvim-lint',
@@ -1057,7 +1015,7 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
+    event = 'UIEnter',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
       {
@@ -1200,6 +1158,7 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    event = 'VimEnter',
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -1238,6 +1197,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    event = 'BufReadPost',
     build = ':TSUpdate',
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
