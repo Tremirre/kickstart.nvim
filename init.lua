@@ -403,7 +403,7 @@ require('lazy').setup({
   -- Multi-cursor support
   {
     'mg979/vim-visual-multi',
-    cmd = 'Git',
+    event = 'BufRead',
   },
   -- Better terminal toggle
   {
