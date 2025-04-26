@@ -271,7 +271,11 @@ require('lazy').setup({
   },
 
   -- Copilot
-  'github/copilot.vim',
+  {
+
+    'github/copilot.vim',
+    version = '1.41.0',
+  },
 
   -- Automatically close brackets/braces
   {
@@ -637,7 +641,7 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true, cmd = { 'Mason' } }, -- NOTE: Must be loaded before dependants
-      { 'williamboman/mason-lspconfig.nvim', cmd = { 'Mason' } },
+      { 'williamboman/mason-lspconfig.nvim' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -799,6 +803,15 @@ require('lazy').setup({
           settings = {
             basedpyright = {
               analysis = {
+                exclude = {
+                  '**/node_modules/**',
+                  '**/__pycache__/**',
+                  '**/.mypy_cache/**',
+                  '**/.pytest_cache/**',
+                  '**/*.ipynb',
+                  '**/venv/**',
+                  '**/.venv/**',
+                },
                 diagnosticMode = 'workspace',
                 typeCheckingMode = 'standard',
                 inlayHints = {
