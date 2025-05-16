@@ -441,6 +441,7 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    commit = '140ac64',
     event = 'VeryLazy',
     opts = {
       signs = {
@@ -637,11 +638,11 @@ require('lazy').setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true, cmd = { 'Mason' } }, -- NOTE: Must be loaded before dependants
-      { 'williamboman/mason-lspconfig.nvim' },
+      { 'williamboman/mason.nvim', config = true, cmd = { 'Mason' }, version = '1.11.0' }, -- NOTE: Must be loaded before dependants
+      { 'williamboman/mason-lspconfig.nvim', cmd = { 'MasonLSP' }, version = '1.32.0' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
