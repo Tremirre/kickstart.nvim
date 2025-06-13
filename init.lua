@@ -1022,6 +1022,12 @@ require('lazy').setup({
         python = { 'ruff_format', 'ruff_fix', 'ruff_organize_imports' },
 
         htmldjango = { 'djlint' },
+
+        vue = { 'prettierd' },
+        html = { 'prettierd' },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
+
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
