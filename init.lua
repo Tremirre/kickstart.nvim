@@ -228,6 +228,7 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local datapath = vim.fn.stdpath 'data'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
@@ -797,6 +798,7 @@ require('lazy').setup({
       local servers = {
         clangd = {},
 
+        ruff = {},
         basedpyright = {
           setup = {
             capabilities = capabilities,
@@ -825,12 +827,6 @@ require('lazy').setup({
           },
         },
 
-        emmet_ls = {
-          setup = {
-            capabilities = capabilities,
-          },
-        },
-
         rust_analyzer = {
           settings = {
             ['rust-analyzer'] = {
@@ -844,10 +840,6 @@ require('lazy').setup({
           },
         },
 
-        vuels = {
-          setup = {},
-        },
-
         css_variables = {
           setup = {},
         },
@@ -856,13 +848,49 @@ require('lazy').setup({
           setup = {
             capabilities = capabilities,
           },
+
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = datapath .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
+                languages = { 'javascript', 'typescript', 'vue' },
+              },
+            },
+          },
+          filetypes = {
+            'javascript',
+            'typescript',
+            'vue',
+          },
         },
 
-        tailwindcss = {
+        volar = {
           setup = {},
         },
 
+        tailwindcss = {
+          setup = {
+            filetypes = {
+              'html',
+              'javascript',
+              'javascriptreact',
+              'typescript',
+              'typescriptreact',
+              'vue',
+              'svelte',
+              'htmldjango',
+            },
+          },
+        },
+
         cssls = {
+          setup = {
+            capabilities = capabilities,
+          },
+        },
+
+        emmet_ls = {
           setup = {
             capabilities = capabilities,
           },
