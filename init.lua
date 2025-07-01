@@ -235,6 +235,16 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- Remove background from main areas
+vim.cmd [[
+  hi Normal guibg=NONE ctermbg=NONE
+  hi NormalNC guibg=NONE ctermbg=NONE
+  hi EndOfBuffer guibg=NONE ctermbg=NONE
+  hi LineNr guibg=NONE ctermbg=NONE
+  hi SignColumn guibg=NONE ctermbg=NONE
+  hi VertSplit guibg=NONE ctermbg=NONE
+]]
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -1181,8 +1191,9 @@ require('lazy').setup({
     config = function()
       require('kanagawa').setup {
         background = {
-          dark = 'wave',
+          dark = 'dragon',
         },
+        transparent = true, -- Enable transparent background
         overrides = function(colors)
           return {
             ['@variable'] = { fg = '#93c1b0' },
