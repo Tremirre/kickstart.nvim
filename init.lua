@@ -827,6 +827,7 @@ require('lazy').setup({
                 },
                 diagnosticMode = 'workspace',
                 typeCheckingMode = 'standard',
+                useLibraryCodeForTypes = false,
                 inlayHints = {
                   variableTypes = true,
                   callArgumentNames = true,
