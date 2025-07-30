@@ -281,11 +281,12 @@ require('lazy').setup({
     end,
   },
 
-  -- Copilot
+  -- SuperMaven
   {
-
-    'github/copilot.vim',
-    version = '1.41.0',
+    'supermaven-inc/supermaven-nvim',
+    config = function()
+      require('supermaven-nvim').setup {}
+    end,
   },
 
   -- Automatically close brackets/braces
@@ -528,7 +529,6 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    cmd = 'Telescope',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
