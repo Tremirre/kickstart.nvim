@@ -1054,6 +1054,16 @@ require('lazy').setup({
     },
   },
 
+  -- Matchup
+  {
+    "andymass/vim-matchup",
+    event = "VeryLazy",
+    init = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" } -- optional UX
+      -- you already have: vim.g.loaded_matchit = 1
+    end,
+  },
+
   { -- linting
     'mfussenegger/nvim-lint',
     lazy = false,
@@ -1268,7 +1278,7 @@ require('lazy').setup({
     event = 'BufReadPost',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'vue', 'javascript', 'typescript', 'css' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
